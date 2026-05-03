@@ -1,0 +1,695 @@
+3/5/2026   16:16
+
+Momentos Zen V2
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Momentos Zen</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Nunito:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --verde:#1b5e20;--verde2:#2e7d32;--verde3:#43a047;--verde4:#81c784;
+  --dorado:#f9a825;--dorado2:#ffe082;
+  --azul:#0a1628;--azul2:#0d2137;
+  --lila:#7b1fa2;--lila2:#ce93d8;
+  --card:rgba(255,255,255,0.06);--borde:rgba(255,255,255,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Nunito',sans-serif;background:var(--azul);color:#fff;overflow-x:hidden;}
+
+.bg-fixed{position:fixed;inset:0;z-index:0;
+  background:radial-gradient(ellipse 80% 60% at 20% 20%,rgba(27,94,32,0.4) 0%,transparent 60%),
+  radial-gradient(ellipse 70% 60% at 80% 80%,rgba(123,31,162,0.35) 0%,transparent 60%),
+  radial-gradient(ellipse 60% 50% at 50% 50%,rgba(10,22,40,0.8) 0%,transparent 70%);}
+#stars-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(10,22,40,0.95);backdrop-filter:blur(12px);padding:0.75rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--borde);}
+.nav-logo{font-family:'Cinzel',serif;font-size:1.4rem;font-weight:900;background:linear-gradient(90deg,var(--verde3),var(--dorado));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-links{display:flex;gap:1rem;list-style:none;flex-wrap:wrap;}
+.nav-links a{color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.75rem;font-weight:800;transition:color 0.2s;}
+.nav-links a:hover{color:var(--dorado);}
+
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6rem 1.5rem 3rem;position:relative;z-index:1;}
+.hero-badge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(67,160,71,0.15);border:1px solid rgba(67,160,71,0.4);color:var(--verde3);font-size:0.72rem;font-weight:900;padding:0.35rem 1rem;border-radius:30px;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.4rem;animation:fadeUp 0.8s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.hero h1{font-family:'Cinzel',serif;font-size:clamp(2.8rem,9vw,5.5rem);font-weight:900;line-height:1.05;margin-bottom:1rem;animation:fadeUp 0.8s 0.1s ease both;}
+.hero h1 .g1{background:linear-gradient(90deg,#81c784,#43a047);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;}
+.hero h1 .g2{background:linear-gradient(90deg,var(--dorado),var(--dorado2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;}
+.hero-sub{font-size:1rem;color:rgba(255,255,255,0.8);max-width:500px;line-height:1.8;margin-bottom:2.5rem;font-weight:700;animation:fadeUp 0.8s 0.2s ease both;}
+.hero-btns{display:flex;gap:0.9rem;flex-wrap:wrap;justify-content:center;animation:fadeUp 0.8s 0.3s ease both;}
+.btn{padding:0.85rem 1.8rem;border-radius:50px;font-family:'Nunito',sans-serif;font-weight:900;font-size:0.88rem;cursor:pointer;border:none;transition:all 0.3s;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;}
+.btn-verde{background:linear-gradient(135deg,var(--verde),var(--verde3));color:#fff;box-shadow:0 6px 22px rgba(27,94,32,0.45);}
+.btn-verde:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(27,94,32,0.6);}
+.btn-dorado{background:linear-gradient(135deg,#f57c00,var(--dorado));color:#fff;box-shadow:0 6px 22px rgba(249,168,37,0.4);}
+.btn-dorado:hover{transform:translateY(-2px);}
+.btn-outline{background:var(--card);border:1.5px solid var(--borde);color:rgba(255,255,255,0.8);}
+.btn-outline:hover{border-color:var(--dorado);color:var(--dorado);}
+.btn-lila{background:linear-gradient(135deg,var(--lila),#9c27b0);color:#fff;}
+
+.section{padding:4rem 1.5rem;position:relative;z-index:1;max-width:820px;margin:0 auto;}
+.sec-title{font-family:'Cinzel',serif;font-size:clamp(1.5rem,5vw,2.2rem);text-align:center;margin-bottom:0.4rem;font-weight:900;}
+.sec-title.verde{background:linear-gradient(90deg,#81c784,var(--verde3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sec-title.dorado{background:linear-gradient(90deg,var(--dorado),var(--dorado2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sec-title.lila{background:linear-gradient(90deg,#ce93d8,var(--lila));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sec-sub{text-align:center;color:rgba(255,255,255,0.7);font-size:0.88rem;margin-bottom:2rem;font-weight:700;}
+.divider{width:60px;height:3px;background:linear-gradient(90deg,var(--verde3),var(--dorado));border-radius:3px;margin:0.6rem auto 2rem;}
+
+/* MENSAJE DEL DÍA */
+#mensaje-card{background:linear-gradient(135deg,rgba(27,94,32,0.35),rgba(13,27,75,0.6));border:1px solid rgba(249,168,37,0.3);border-radius:24px;padding:2rem;text-align:center;margin-bottom:1.2rem;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+#mensaje-titulo{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--dorado);margin-bottom:0.8rem;font-weight:900;}
+#mensaje-texto{font-size:0.92rem;color:rgba(255,255,255,0.9);line-height:1.8;font-weight:700;}
+#mensaje-consejo{display:none;margin-top:1rem;background:rgba(67,160,71,0.1);border:1px solid rgba(67,160,71,0.25);border-radius:16px;padding:1rem;font-size:0.85rem;color:rgba(255,255,255,0.8);line-height:1.7;text-align:center;font-weight:700;}
+
+/* LUNA */
+#luna-card{background:linear-gradient(135deg,rgba(74,0,128,0.4),rgba(13,27,75,0.6));border:1px solid rgba(206,147,216,0.3);border-radius:24px;padding:2rem;text-align:center;margin-bottom:1.2rem;}
+
+/* MÚSICA */
+.music-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;}
+.music-card{background:var(--card);border:1px solid var(--borde);border-radius:20px;padding:1.2rem;transition:all 0.25s;}
+.music-card:hover{border-color:var(--verde3);transform:translateY(-3px);}
+.music-emoji{font-size:2.5rem;text-align:center;margin-bottom:0.6rem;}
+.music-tag{font-size:0.65rem;font-weight:900;letter-spacing:0.12em;text-transform:uppercase;color:var(--verde3);margin-bottom:0.2rem;}
+.music-title{font-size:0.88rem;font-weight:800;color:#fff;margin-bottom:0.8rem;}
+
+/* MEDITACIONES */
+.med-grid{display:grid;gap:0.85rem;}
+.med-card{background:var(--card);border:1px solid var(--borde);border-radius:18px;padding:1.2rem;display:flex;gap:1rem;align-items:flex-start;transition:all 0.25s;}
+.med-card:hover{border-color:var(--dorado);}
+.med-icon{font-size:2rem;background:rgba(249,168,37,0.1);width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.med-body h4{font-size:0.9rem;font-weight:900;color:var(--dorado2);margin-bottom:0.2rem;}
+.med-body p{font-size:0.78rem;color:rgba(255,255,255,0.7);line-height:1.5;font-weight:700;}
+
+/* TRÁNSITOS */
+.signo-tabs{display:grid;grid-template-columns:repeat(6,1fr);gap:0.4rem;margin-bottom:1.5rem;}
+.signo-tab{background:var(--card);border:1px solid var(--borde);border-radius:12px;padding:0.5rem 0.2rem;cursor:pointer;text-align:center;transition:all 0.2s;font-size:0.7rem;color:rgba(255,255,255,0.7);font-weight:800;}
+.signo-tab:hover{border-color:var(--dorado);color:var(--dorado);}
+.signo-tab.sel{border-color:var(--dorado);background:rgba(249,168,37,0.12);color:var(--dorado);}
+.signo-emoji{font-size:1.3rem;display:block;margin-bottom:0.15rem;}
+#transito-result{background:var(--card);border:1px solid rgba(249,168,37,0.2);border-radius:20px;padding:1.5rem;min-height:120px;}
+
+/* TAROT Y RUNAS - animación de mezcla */
+.cartas-mezcla{display:flex;justify-content:center;align-items:center;height:120px;position:relative;margin-bottom:1.5rem;}
+.carta-anim{position:absolute;width:55px;height:85px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:900;color:#fff;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.4);animation:cartaMezcla 3s ease-in-out infinite;}
+@keyframes cartaMezcla{0%,100%{transform:translateX(0) rotate(0deg);}25%{transform:translateX(-30px) rotate(-8deg);}75%{transform:translateX(30px) rotate(8deg);}}
+
+.runas-mezcla{display:flex;justify-content:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.runa-anim{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,rgba(74,0,128,0.6),rgba(123,31,162,0.4));border:1px solid rgba(206,147,216,0.4);display:flex;align-items:center;justify-content:center;font-size:1.3rem;animation:runaMezcla 2s ease-in-out infinite;}
+@keyframes runaMezcla{0%,100%{transform:translateY(0) rotate(0deg);opacity:0.7;}50%{transform:translateY(-8px) rotate(5deg);opacity:1;}}
+
+.runa-pregunta{width:100%;background:rgba(255,255,255,0.06);border:1.5px solid var(--borde);border-radius:14px;padding:0.85rem 1rem;color:#fff;font-family:'Nunito',sans-serif;font-size:0.9rem;font-weight:700;outline:none;resize:vertical;min-height:75px;transition:border-color 0.2s;margin-bottom:1rem;}
+.runa-pregunta:focus{border-color:var(--lila);}
+
+/* LECTURAS resultado */
+.lectura-resultado{background:var(--card);border:1px solid rgba(249,168,37,0.2);border-radius:20px;padding:1.5rem;margin-top:1rem;font-size:0.88rem;line-height:1.8;color:rgba(255,255,255,0.9);font-weight:700;}
+.lectura-resultado h3{font-family:'Cinzel',serif;color:var(--dorado);font-size:1rem;margin-bottom:0.6rem;font-weight:900;}
+.pos-card{background:rgba(255,255,255,0.04);border:1px solid rgba(249,168,37,0.12);border-radius:14px;padding:0.9rem;margin-bottom:0.6rem;display:flex;gap:0.7rem;align-items:flex-start;}
+.pos-num{background:linear-gradient(135deg,var(--verde),var(--verde3));color:#fff;font-family:'Cinzel',serif;font-size:0.85rem;font-weight:900;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pos-info .pos-nombre{font-size:0.68rem;color:var(--dorado);font-weight:900;letter-spacing:0.1em;text-transform:uppercase;}
+.pos-info .pos-carta{font-size:0.88rem;font-weight:900;color:#fff;margin:0.1rem 0;}
+.pos-info .pos-interp{font-size:0.78rem;color:rgba(255,255,255,0.75);line-height:1.6;}
+
+/* NUMEROLOGÍA */
+.form-card{background:var(--card);border:1px solid var(--borde);border-radius:24px;padding:1.8rem;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;margin-bottom:0.9rem;}
+.fgroup{display:flex;flex-direction:column;gap:0.35rem;}
+.fgroup label{font-size:0.75rem;font-weight:900;color:var(--dorado);letter-spacing:0.1em;text-transform:uppercase;}
+.fgroup input{background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.15);border-radius:12px;padding:0.75rem 1rem;color:#fff;font-family:'Nunito',sans-serif;font-size:0.88rem;font-weight:700;outline:none;transition:border-color 0.2s;width:100%;}
+.fgroup input:focus{border-color:var(--dorado);}
+.btn-calc{width:100%;background:linear-gradient(135deg,var(--lila),#9c27b0);color:#fff;border:none;padding:1rem;border-radius:40px;font-family:'Nunito',sans-serif;font-weight:900;font-size:1rem;cursor:pointer;transition:all 0.3s;margin-top:0.5rem;}
+.btn-calc:hover{transform:translateY(-2px);}
+
+/* GUÍAS */
+.tipo-btn{background:var(--card);border:1.5px solid var(--borde);border-radius:14px;padding:0.7rem 0.5rem;cursor:pointer;text-align:center;transition:all 0.22s;color:#fff;font-family:'Nunito',sans-serif;font-size:0.78rem;font-weight:800;}
+.tipo-btn:hover{border-color:var(--dorado);background:rgba(249,168,37,0.1);}
+.tipo-btn.sel{border-color:var(--dorado);background:rgba(249,168,37,0.18);color:var(--dorado);}
+.tipo-emoji{font-size:1.4rem;display:block;margin-bottom:0.25rem;}
+
+/* ARTÍCULOS */
+.art-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;}
+.art-card{background:var(--card);border:1px solid var(--borde);border-radius:18px;overflow:hidden;transition:all 0.25s;cursor:pointer;}
+.art-card:hover{transform:translateY(-4px);border-color:var(--verde3);box-shadow:0 8px 25px rgba(67,160,71,0.2);}
+.art-img{height:110px;display:flex;align-items:center;justify-content:center;font-size:3rem;}
+.art-body{padding:1rem;}
+.art-tag{font-size:0.65rem;font-weight:900;letter-spacing:0.1em;text-transform:uppercase;color:var(--verde3);margin-bottom:0.3rem;}
+.art-title{font-size:0.9rem;font-weight:900;color:#fff;margin-bottom:0.3rem;line-height:1.35;}
+.art-desc{font-size:0.75rem;color:rgba(255,255,255,0.65);line-height:1.5;font-weight:700;}
+.art-leer{margin-top:0.5rem;font-size:0.72rem;color:var(--verde3);font-weight:900;}
+
+/* MODAL ARTÍCULO */
+#art-modal{display:none;background:var(--card);border:1px solid var(--borde);border-radius:24px;padding:1.8rem;margin-top:1.5rem;}
+
+/* CÓMO MEDITAR */
+.paso-card{background:var(--card);border:1px solid var(--borde);border-radius:18px;padding:1.2rem;display:flex;gap:1rem;align-items:flex-start;margin-bottom:0.85rem;}
+.paso-num{background:linear-gradient(135deg,var(--verde),var(--verde3));color:#fff;font-family:'Cinzel',serif;font-size:1.1rem;font-weight:900;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.paso-titulo{font-weight:900;color:var(--dorado2);margin-bottom:0.3rem;font-size:0.92rem;}
+.paso-texto{font-size:0.82rem;color:rgba(255,255,255,0.8);line-height:1.6;font-weight:700;}
+
+/* CONTRIB */
+.contrib-box{background:linear-gradient(135deg,rgba(27,94,32,0.3),rgba(249,168,37,0.1));border:1px solid rgba(249,168,37,0.25);border-radius:24px;padding:2rem;text-align:center;}
+.contrib-box h3{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--dorado);margin-bottom:0.5rem;font-weight:900;}
+.contrib-box p{color:rgba(255,255,255,0.8);font-size:0.9rem;line-height:1.7;margin-bottom:1.5rem;font-weight:700;}
+
+.spin-zen{width:40px;height:40px;border-radius:50%;border:3px solid transparent;border-top-color:var(--dorado);border-right-color:var(--verde3);animation:spin 1s linear infinite;margin:0 auto 0.8rem;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.btn-nuevo{width:100%;background:transparent;border:1.5px solid var(--borde);padding:0.85rem;border-radius:40px;cursor:pointer;color:rgba(255,255,255,0.6);font-family:'Nunito',sans-serif;font-weight:800;transition:all 0.22s;margin-top:0.8rem;}
+.btn-nuevo:hover{border-color:var(--dorado);color:var(--dorado);}
+
+footer{background:rgba(0,0,0,0.5);border-top:1px solid var(--borde);text-align:center;padding:2rem;font-size:0.82rem;color:rgba(255,255,255,0.5);position:relative;z-index:1;}
+footer strong{color:var(--dorado);font-size:1rem;}
+
+@media(max-width:600px){
+  nav .nav-links{display:none;}
+  .signo-tabs{grid-template-columns:repeat(4,1fr);}
+  .form-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<canvas id="stars-canvas"></canvas>
+<div class="bg-fixed"></div>
+
+<nav>
+  <div class="nav-logo">🌿 Momentos Zen</div>
+  <ul class="nav-links">
+    <li><a href="#mensaje">Mensaje</a></li>
+    <li><a href="#luna">Luna</a></li>
+    <li><a href="#tarot">Tarot</a></li>
+    <li><a href="#numerologia">Numerología</a></li>
+    <li><a href="#runas">Runas</a></li>
+    <li><a href="#transitos">Tránsitos</a></li>
+    <li><a href="#musica">Música</a></li>
+    <li><a href="#articulos">Artículos</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🌿 Momentos Zen</div>
+  <h1><span class="g1">Momentos</span><span class="g2">Zen</span></h1>
+  <p class="hero-sub">Tu espacio de paz interior. Mensajes, meditaciones, astrología, tarot y runas para acompañarte cada día.</p>
+  <div class="hero-btns">
+    <a href="#mensaje" class="btn btn-dorado">✨ Mensaje del día</a>
+    <a href="#tarot" class="btn btn-lila">🃏 Lectura de Tarot</a>
+    <a href="#transitos" class="btn btn-verde">⭐ Tránsitos</a>
+    <a href="#musica" class="btn btn-outline">🎵 Música</a>
+  </div>
+</section>
+
+<!-- MENSAJE DEL DÍA -->
+<section class="section" id="mensaje">
+  <div class="sec-title dorado">✨ Mensaje Guía del Día</div>
+  <div class="divider"></div>
+  <p class="sec-sub">Un mensaje especial del universo para vos. Se renueva cada día 🌟</p>
+  <div style="max-width:520px;margin:0 auto;">
+    <div id="mensaje-card">
+      <div class="spin-zen"></div>
+      <div id="mensaje-titulo" style="display:none;"></div>
+      <div id="mensaje-texto" style="display:none;"></div>
+    </div>
+    <div id="mensaje-consejo"></div>
+  </div>
+</section>
+
+<!-- FASE LUNAR -->
+<section class="section" id="luna">
+  <div class="sec-title lila">🌕 Fase Lunar de Hoy</div>
+  <div class="divider"></div>
+  <p class="sec-sub">La luna influye en tus emociones y energía cada día 🌙</p>
+  <div style="max-width:480px;margin:0 auto;">
+    <div id="luna-card">
+      <div class="spin-zen"></div>
+      <div id="luna-emoji" style="font-size:4.5rem;display:none;margin-bottom:0.5rem;"></div>
+      <div id="luna-nombre" style="font-family:'Cinzel',serif;font-size:1.3rem;color:var(--lila2);margin-bottom:0.3rem;font-weight:900;display:none;"></div>
+      <div id="luna-signo" style="font-size:0.8rem;color:rgba(255,255,255,0.55);margin-bottom:0.9rem;font-weight:700;display:none;"></div>
+      <div id="luna-texto" style="font-size:0.88rem;color:rgba(255,255,255,0.85);line-height:1.8;font-weight:700;display:none;"></div>
+    </div>
+    <div id="luna-consejos" style="display:none;background:rgba(206,147,216,0.08);border:1px solid rgba(206,147,216,0.2);border-radius:16px;padding:1.2rem;font-size:0.85rem;color:rgba(255,255,255,0.8);line-height:1.8;font-weight:700;"></div>
+  </div>
+</section>
+
+<!-- LECTURA DE TAROT (Cruz Celta) -->
+<section class="section" id="tarot">
+  <div class="sec-title dorado">🃏 Lectura de Tarot</div>
+  <div class="divider"></div>
+  <p class="sec-sub">Cruz Celta — La tirada más completa. 10 cartas que iluminan tu camino 🌟</p>
+  <div style="max-width:560px;margin:0 auto;">
+    <!-- Cartas mezclándose -->
+    <div class="cartas-mezcla" id="cartas-mezcla">
+      <div class="carta-anim" style="background:linear-gradient(135deg,#4a0080,#7b1fa2);animation-delay:0s;transform:rotate(-15deg) translateX(-50px);">🌟</div>
+      <div class="carta-anim" style="background:linear-gradient(135deg,#1b5e20,#2e7d32);animation-delay:0.3s;transform:rotate(-5deg) translateX(-20px);">🌙</div>
+      <div class="carta-anim" style="background:linear-gradient(135deg,#e65100,#f57c00);animation-delay:0.6s;transform:rotate(0deg);">☀️</div>
+      <div class="carta-anim" style="background:linear-gradient(135deg,#1a237e,#283593);animation-delay:0.9s;transform:rotate(5deg) translateX(20px);">⭐</div>
+      <div class="carta-anim" style="background:linear-gradient(135deg,#880e4f,#c2185b);animation-delay:1.2s;transform:rotate(15deg) translateX(50px);">✨</div>
+    </div>
+    <textarea class="runa-pregunta" id="celta-pregunta" placeholder="¿Cuál es tu pregunta para el Tarot? (opcional)"></textarea>
+    <button class="btn btn-dorado" style="width:100%;justify-content:center;font-size:0.95rem;" onclick="tirarCruzCelta()">🃏 Iniciar lectura de Tarot</button>
+    <div id="celta-loading" style="display:none;text-align:center;padding:2rem;"><div class="spin-zen"></div><p style="color:rgba(255,255,255,0.5);font-weight:700;">Las cartas están hablando...</p></div>
+    <div id="celta-resultado"></div>
+  </div>
+</section>
+
+<!-- NÚMERO DE VIDA -->
+<section class="section" id="numerologia">
+  <div class="sec-title verde">🔢 Tu Número de Vida</div>
+  <div class="divider"></div>
+  <p class="sec-sub">La numerología revela tu misión, talentos y desafíos en esta vida ✨</p>
+  <div style="max-width:480px;margin:0 auto;">
+    <div class="form-card" style="margin-bottom:1.2rem;">
+      <div class="form-grid">
+        <div class="fgroup"><label>Tu nombre completo</label><input type="text" id="num-nombre" placeholder="Ej: María González"></div>
+        <div class="fgroup"><label>Fecha de nacimiento</label><input type="date" id="num-fecha"></div>
+      </div>
+      <button class="btn-calc" onclick="calcularNumero()">🔢 Calcular mi número de vida</button>
+    </div>
+    <div id="num-loading" style="display:none;text-align:center;padding:2rem;"><div class="spin-zen"></div><p style="color:rgba(255,255,255,0.5);font-weight:700;">Calculando...</p></div>
+    <div id="num-resultado"></div>
+  </div>
+</section>
+
+<!-- LECTURA DE RUNAS -->
+<section class="section" id="runas">
+  <div class="sec-title lila">ᚱ Lectura de Runas Nórdicas</div>
+  <div class="divider"></div>
+  <p class="sec-sub">Las runas son un antiguo oráculo nórdico. Formulá tu pregunta con intención 🌿</p>
+  <div style="max-width:480px;margin:0 auto;">
+    <!-- Runas mezclándose -->
+    <div class="runas-mezcla" id="runas-mezcla">
+      <div class="runa-anim" style="animation-delay:0s;">ᚠ</div>
+      <div class="runa-anim" style="animation-delay:0.2s;">ᚢ</div>
+      <div class="runa-anim" style="animation-delay:0.4s;">ᚦ</div>
+      <div class="runa-anim" style="animation-delay:0.6s;">ᚨ</div>
+      <div class="runa-anim" style="animation-delay:0.8s;">ᚱ</div>
+      <div class="runa-anim" style="animation-delay:1.0s;">ᚲ</div>
+      <div class="runa-anim" style="animation-delay:1.2s;">ᚷ</div>
+      <div class="runa-anim" style="animation-delay:1.4s;">ᚹ</div>
+    </div>
+    <textarea class="runa-pregunta" id="runa-pregunta" placeholder="¿Cuál es tu pregunta para las runas? (opcional)"></textarea>
+    <button class="btn btn-lila" style="width:100%;justify-content:center;" onclick="tirarRunas()">ᚱ Iniciar lectura de runas</button>
+    <div id="runas-display" style="display:flex;gap:0.8rem;justify-content:center;margin:1.2rem 0;flex-wrap:wrap;"></div>
+    <div id="runa-interpretacion" style="display:none;" class="lectura-resultado"></div>
+  </div>
+</section>
+
+<!-- TRÁNSITOS -->
+<section class="section" id="transitos">
+  <div class="sec-title dorado">⭐ Tránsitos del Día</div>
+  <div class="divider"></div>
+  <div style="text-align:center;font-size:0.82rem;color:rgba(255,255,255,0.6);margin-bottom:1.5rem;font-weight:800;" id="fecha-display"></div>
+  <div class="signo-tabs">
+    <div class="signo-tab sel" onclick="verTransito('Aries',this)"><span class="signo-emoji">♈</span>Aries</div>
+    <div class="signo-tab" onclick="verTransito('Tauro',this)"><span class="signo-emoji">♉</span>Tauro</div>
+    <div class="signo-tab" onclick="verTransito('Géminis',this)"><span class="signo-emoji">♊</span>Géminis</div>
+    <div class="signo-tab" onclick="verTransito('Cáncer',this)"><span class="signo-emoji">♋</span>Cáncer</div>
+    <div class="signo-tab" onclick="verTransito('Leo',this)"><span class="signo-emoji">♌</span>Leo</div>
+    <div class="signo-tab" onclick="verTransito('Virgo',this)"><span class="signo-emoji">♍</span>Virgo</div>
+    <div class="signo-tab" onclick="verTransito('Libra',this)"><span class="signo-emoji">♎</span>Libra</div>
+    <div class="signo-tab" onclick="verTransito('Escorpio',this)"><span class="signo-emoji">♏</span>Escorpio</div>
+    <div class="signo-tab" onclick="verTransito('Sagitario',this)"><span class="signo-emoji">♐</span>Sagitario</div>
+    <div class="signo-tab" onclick="verTransito('Capricornio',this)"><span class="signo-emoji">♑</span>Capricornio</div>
+    <div class="signo-tab" onclick="verTransito('Acuario',this)"><span class="signo-emoji">♒</span>Acuario</div>
+    <div class="signo-tab" onclick="verTransito('Piscis',this)"><span class="signo-emoji">♓</span>Piscis</div>
+  </div>
+  <div id="transito-result" style="background:var(--card);border:1px solid rgba(249,168,37,0.2);border-radius:20px;padding:1.5rem;min-height:120px;font-size:0.9rem;line-height:1.8;font-weight:700;"></div>
+</section>
+
+<!-- MÚSICA -->
+<section class="section" id="musica">
+  <div class="sec-title verde">🎵 Música para el Alma</div>
+  <div class="divider"></div>
+  <div class="music-grid">
+    <div class="music-card"><div class="music-emoji">🌧️</div><div class="music-tag">Dormir</div><div class="music-title">Lluvia suave · Dormir profundo</div><audio controls style="width:100%"><source src="https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg"></audio></div>
+    <div class="music-card"><div class="music-emoji">🐦</div><div class="music-tag">Meditación</div><div class="music-title">Pájaros · Paz interior</div><audio controls style="width:100%"><source src="https://cdn.pixabay.com/audio/2022/10/14/audio_4166b6f5b2.mp3" type="audio/mpeg"></audio></div>
+    <div class="music-card"><div class="music-emoji">🌿</div><div class="music-tag">Relax</div><div class="music-title">Naturaleza · Sonidos del bosque</div><audio controls style="width:100%"><source src="https://cdn.pixabay.com/audio/2022/03/10/audio_8cb749386f.mp3" type="audio/mpeg"></audio></div>
+    <div class="music-card"><div class="music-emoji">🌊</div><div class="music-tag">Ansiedad</div><div class="music-title">Olas del mar · Calmar la mente</div><audio controls style="width:100%"><source src="https://cdn.pixabay.com/audio/2022/03/24/audio_3e3f35c226.mp3" type="audio/mpeg"></audio></div>
+  </div>
+</section>
+
+<!-- MEDITACIONES -->
+<section class="section" id="meditaciones">
+  <div class="sec-title dorado">🧘 Meditaciones Guiadas</div>
+  <div class="divider"></div>
+  <div class="med-grid">
+    <div class="med-card"><div class="med-icon">🌅</div><div class="med-body"><h4>Meditación de la Calma</h4><p>Para momentos en que necesitás mayor relajación y paz interior.</p><audio controls style="width:100%;margin-top:0.6rem;"><source src="https://www.amparopilesmindfulness.com/wp-content/uploads/2021/10/1.-Med-Calma22.mp3" type="audio/mpeg"></audio></div></div>
+    <div class="med-card"><div class="med-icon">🌙</div><div class="med-body"><h4>Meditación del Aquí y Ahora</h4><p>Sentí el presente, soltando preocupaciones del pasado y del futuro.</p><audio controls style="width:100%;margin-top:0.6rem;"><source src="https://www.amparopilesmindfulness.com/wp-content/uploads/2023/03/2.Aqui-y-ahora-23b.mp3" type="audio/mpeg"></audio></div></div>
+    <div class="med-card"><div class="med-icon">💚</div><div class="med-body"><h4>Meditación del Escáner Corporal</h4><p>Recorré con atención cada parte del cuerpo para soltar tensiones.</p><audio controls style="width:100%;margin-top:0.6rem;"><source src="https://www.amparopilesmindfulness.com/wp-content/uploads/2025/11/3.Med_.-Escaner25-corporal.mp3" type="audio/mpeg"></audio></div></div>
+    <div class="med-card"><div class="med-icon">🌬️</div><div class="med-body"><h4>Meditación Sanadora</h4><p>Llenate de energía positiva y soltá todo lo que ya no te sirve.</p><audio controls style="width:100%;margin-top:0.6rem;"><source src="https://www.amparopilesmindfulness.com/wp-content/uploads/2025/12/Med.-Sanadora25.mp3" type="audio/mpeg"></audio></div></div>
+  </div>
+</section>
+
+<!-- CÓMO MEDITAR -->
+<section class="section" id="como-meditar">
+  <div class="sec-title verde">🧘 ¿Cómo Meditar? Guía para Principiantes</div>
+  <div class="divider"></div>
+  <div style="max-width:560px;margin:0 auto;">
+    <div class="paso-card"><div class="paso-num">1</div><div><div class="paso-titulo">Elegí un lugar tranquilo</div><div class="paso-texto">Buscá un rincón donde no te molesten. No tiene que ser perfecto — alcanza con sentarte cómoda/o en una silla o en el piso.</div></div></div>
+    <div class="paso-card"><div class="paso-num">2</div><div><div class="paso-titulo">Adoptá una postura cómoda</div><div class="paso-texto">Espalda recta pero sin tensión. Manos sobre las rodillas. Ojos cerrados o semicerrados mirando al piso.</div></div></div>
+    <div class="paso-card"><div class="paso-num">3</div><div><div class="paso-titulo">Enfocate en tu respiración</div><div class="paso-texto">Inhalá lento por la nariz contando hasta 4. Retené 2 segundos. Exhalá por la boca contando hasta 6. Repetí.</div></div></div>
+    <div class="paso-card"><div class="paso-num">4</div><div><div class="paso-titulo">Observá tus pensamientos sin juzgarlos</div><div class="paso-texto">Si tu mente se va a otro lado, está bien. Solo notalo y volvé suavemente a la respiración. No hay meditación "mala".</div></div></div>
+    <div class="paso-card"><div class="paso-num">5</div><div><div class="paso-titulo">Empezá con 5 minutos al día</div><div class="paso-texto">Con 5 minutos diarios ya vas a notar cambios en pocas semanas. ¡La constancia es la clave! 🌿</div></div></div>
+  </div>
+</section>
+
+<!-- CRISTAL Y ANIMAL -->
+<section class="section" id="guias">
+  <div class="sec-title lila">💎 Cristal & 🦋 Animal de Poder</div>
+  <div class="divider"></div>
+  <p class="sec-sub">Tus guías energéticos de hoy. Se renuevan cada día 🌟</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:520px;margin:0 auto;">
+    <div style="background:var(--card);border:1px solid var(--borde);border-radius:20px;padding:1.3rem;text-align:center;"><div style="font-size:2.8rem;margin-bottom:0.5rem;">💎</div><div style="font-family:'Cinzel',serif;font-size:0.85rem;color:var(--dorado);margin-bottom:0.3rem;font-weight:900;" id="cristal-nombre"><div class="spin-zen" style="width:25px;height:25px;margin:0 auto;"></div></div><div style="font-size:0.75rem;color:rgba(255,255,255,0.7);line-height:1.6;font-weight:700;" id="cristal-texto"></div></div>
+    <div style="background:var(--card);border:1px solid var(--borde);border-radius:20px;padding:1.3rem;text-align:center;"><div style="font-size:2.8rem;margin-bottom:0.5rem;" id="animal-emoji">🦋</div><div style="font-family:'Cinzel',serif;font-size:0.85rem;color:var(--dorado);margin-bottom:0.3rem;font-weight:900;" id="animal-nombre"></div><div style="font-size:0.75rem;color:rgba(255,255,255,0.7);line-height:1.6;font-weight:700;" id="animal-texto"></div></div>
+  </div>
+</section>
+
+<!-- AFIRMACIONES -->
+<section class="section" id="afirmaciones">
+  <div class="sec-title dorado">💭 Afirmaciones del Día</div>
+  <div class="divider"></div>
+  <p class="sec-sub">¿Cómo te sentís hoy? Recibí afirmaciones personalizadas 🌸</p>
+  <div style="max-width:480px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1.2rem;">
+      <button class="tipo-btn" onclick="pedirAfirmaciones('ansiosa o preocupada',this)"><span class="tipo-emoji">😰</span>Ansiosa/o</button>
+      <button class="tipo-btn" onclick="pedirAfirmaciones('triste o melancólica',this)"><span class="tipo-emoji">😢</span>Triste</button>
+      <button class="tipo-btn" onclick="pedirAfirmaciones('cansada o sin energía',this)"><span class="tipo-emoji">😴</span>Sin energía</button>
+      <button class="tipo-btn" onclick="pedirAfirmaciones('enojada o frustrada',this)"><span class="tipo-emoji">😤</span>Enojada/o</button>
+      <button class="tipo-btn" onclick="pedirAfirmaciones('bien y con ganas de crecer',this)"><span class="tipo-emoji">😊</span>Bien</button>
+      <button class="tipo-btn" onclick="pedirAfirmaciones('en búsqueda de mi propósito',this)"><span class="tipo-emoji">🔍</span>Buscando</button>
+    </div>
+    <div id="afirm-loading" style="display:none;text-align:center;padding:1.5rem;"><div class="spin-zen"></div></div>
+    <div id="afirm-resultado"></div>
+  </div>
+</section>
+
+<!-- ARTÍCULOS -->
+<section class="section" id="articulos">
+  <div class="sec-title verde">📖 Artículos de Bienestar</div>
+  <div class="divider"></div>
+  <p class="sec-sub">Tocá cualquier artículo para leerlo completo 🌿</p>
+  <div class="art-grid">
+    <div class="art-card" onclick="abrirArticulo(0)"><div class="art-img" style="background:linear-gradient(135deg,#1b5e20,#2e7d32)">🧘</div><div class="art-body"><div class="art-tag">Meditación</div><div class="art-title">5 técnicas para calmar la mente en 5 minutos</div><div class="art-desc">Prácticas simples para cualquier momento.</div><div class="art-leer">Leer artículo →</div></div></div>
+    <div class="art-card" onclick="abrirArticulo(1)"><div class="art-img" style="background:linear-gradient(135deg,#1a237e,#283593)">🌙</div><div class="art-body"><div class="art-tag">Sueño</div><div class="art-title">Cómo preparar tu mente para dormir mejor</div><div class="art-desc">Rituales nocturnos para descansar profundamente.</div><div class="art-leer">Leer artículo →</div></div></div>
+    <div class="art-card" onclick="abrirArticulo(2)"><div class="art-img" style="background:linear-gradient(135deg,#4a0080,#7b1fa2)">😮‍💨</div><div class="art-body"><div class="art-tag">Relax</div><div class="art-title">Respiración: el secreto para calmar la ansiedad</div><div class="art-desc">Técnicas que activan tu sistema nervioso.</div><div class="art-leer">Leer artículo →</div></div></div>
+    <div class="art-card" onclick="abrirArticulo(3)"><div class="art-img" style="background:linear-gradient(135deg,#004d40,#00695c)">🌿</div><div class="art-body"><div class="art-tag">Mindfulness</div><div class="art-title">Qué es el mindfulness y cómo empezar hoy</div><div class="art-desc">Guía práctica y sin complicaciones.</div><div class="art-leer">Leer artículo →</div></div></div>
+    <div class="art-card" onclick="abrirArticulo(4)"><div class="art-img" style="background:linear-gradient(135deg,#e65100,#f57c00)">☀️</div><div class="art-body"><div class="art-tag">Rutinas</div><div class="art-title">Rutina matinal zen para empezar el día con energía</div><div class="art-desc">10 minutos que cambian todo.</div><div class="art-leer">Leer artículo →</div></div></div>
+    <div class="art-card" onclick="abrirArticulo(5)"><div class="art-img" style="background:linear-gradient(135deg,#880e4f,#c2185b)">💆</div><div class="art-body"><div class="art-tag">Estrés</div><div class="art-title">7 formas de soltar el estrés sin salir de casa</div><div class="art-desc">Estrategias simples y efectivas.</div><div class="art-leer">Leer artículo →</div></div></div>
+  </div>
+  <div id="art-modal" style="display:none;background:var(--card);border:1px solid var(--borde);border-radius:24px;padding:1.8rem;margin-top:1.5rem;">
+    <div id="art-modal-loading" style="display:none;text-align:center;padding:2rem;"><div class="spin-zen"></div><p style="color:rgba(255,255,255,0.5);font-weight:700;">Escribiendo artículo...</p></div>
+    <div id="art-modal-content"></div>
+    <button class="btn-nuevo" onclick="cerrarArticulo()">← Volver a los artículos</button>
+  </div>
+</section>
+
+<!-- CONTRIBUCIÓN -->
+<section class="section">
+  <div class="contrib-box">
+    <h3>🌿 ¿Te ayudó este espacio?</h3>
+    <p>Momentos Zen es gratuito y está hecho con amor. Si encontraste paz, inspiración o claridad acá, podés colaborar con una contribución voluntaria. ¡Gracias desde el alma! 💚</p>
+    <a href="https://mpago.la/2cv7Gii" target="_blank" class="btn btn-verde" style="display:inline-flex;">💚 Hacer una contribución</a>
+  </div>
+</section>
+
+<footer>
+  <strong>🌿 Momentos Zen</strong><br><br>
+  Un espacio para el bienestar del alma ✨<br>
+  <small style="opacity:0.4;">Las lecturas son orientativas y con fines de entretenimiento espiritual.</small>
+</footer>
+
+<script>
+// ===== ESTRELLAS ANIMADAS =====
+(function(){
+  const c=document.getElementById('stars-canvas');
+  const ctx=c.getContext('2d');
+  let stars=[],shootingStars=[],particles=[];
+  function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}
+  function init(){
+    stars=[];
+    for(let i=0;i<300;i++)stars.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*2+0.2,a:Math.random(),da:Math.random()*0.008+0.002,col:['#fff','#ffe082','#81c784','#ce93d8','#80deea'][Math.floor(Math.random()*5)]});
+    particles=[];
+    for(let i=0;i<25;i++)particles.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*4+1,vx:(Math.random()-0.5)*0.4,vy:(Math.random()-0.5)*0.4,a:Math.random()*0.3+0.1,col:['#81c784','#ce93d8','#ffe082','#80deea'][Math.floor(Math.random()*4)]});
+  }
+  function addShot(){if(shootingStars.length<4&&Math.random()<0.025)shootingStars.push({x:Math.random()*c.width,y:Math.random()*c.height*0.4,len:Math.random()*150+80,speed:Math.random()*10+6,angle:Math.PI/4+Math.random()*0.3,life:1});}
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    const t=Date.now()*0.0003;
+    for(let i=0;i<3;i++){
+      const g=ctx.createLinearGradient(0,c.height*0.1,0,c.height*0.7);
+      g.addColorStop(0,'transparent');
+      g.addColorStop(0.5,`rgba(${i===0?'67,160,71':i===1?'123,31,162':'26,35,126'},${0.05+Math.sin(t+i)*0.025})`);
+      g.addColorStop(1,'transparent');
+      ctx.fillStyle=g;
+      ctx.beginPath();ctx.moveTo(0,0);
+      for(let x=0;x<=c.width;x+=40)ctx.lineTo(x,c.height*0.3+Math.sin(x*0.004+t+i*2)*80);
+      ctx.lineTo(c.width,c.height);ctx.lineTo(0,c.height);ctx.fill();
+    }
+    stars.forEach(s=>{s.a+=s.da;if(s.a>1||s.a<0)s.da*=-1;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.globalAlpha=s.a;ctx.fillStyle=s.col;ctx.fill();});
+    ctx.globalAlpha=1;
+    particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=c.width;if(p.x>c.width)p.x=0;if(p.y<0)p.y=c.height;if(p.y>c.height)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.globalAlpha=p.a;ctx.fillStyle=p.col;ctx.fill();});
+    ctx.globalAlpha=1;
+    addShot();
+    shootingStars=shootingStars.filter(s=>{s.x+=Math.cos(s.angle)*s.speed;s.y+=Math.sin(s.angle)*s.speed;s.life-=0.018;if(s.life<=0)return false;const g=ctx.createLinearGradient(s.x,s.y,s.x-Math.cos(s.angle)*s.len,s.y-Math.sin(s.angle)*s.len);g.addColorStop(0,`rgba(255,255,255,${s.life})`);g.addColorStop(1,'rgba(255,255,255,0)');ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(s.x-Math.cos(s.angle)*s.len,s.y-Math.sin(s.angle)*s.len);ctx.strokeStyle=g;ctx.lineWidth=2;ctx.stroke();return true;});
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',()=>{resize();init();});
+  resize();init();draw();
+})();
+
+// ===== FECHA =====
+const hoy=new Date();
+const diasSem=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+const meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const fechaStr=`${diasSem[hoy.getDay()]} ${hoy.getDate()} de ${meses[hoy.getMonth()]} de ${hoy.getFullYear()}`;
+document.getElementById('fecha-display').textContent=fechaStr;
+
+// ===== API HELPER — usa Netlify Function =====
+async function llamarIA(prompt, maxTokens=600){
+  const r = await fetch("/.netlify/functions/gemini-query", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ prompt, maxTokens })
+  });
+  const d = await r.json();
+  if(d.error) throw new Error(JSON.stringify(d.error));
+  return d.text.trim().replace(/^```json\s*/,'').replace(/```$/,'').trim();
+}
+
+// ===== MENSAJE GUÍA DEL DÍA =====
+async function cargarMensaje(){
+  try{
+    const txt=await llamarIA(`Sos una guía espiritual. Hoy es ${fechaStr}. Escribí un mensaje guía inspirador para el día. Respondé SOLO JSON sin backticks: {"titulo":"título breve y poético","mensaje":"mensaje profundo de 2-3 oraciones en español rioplatense cálido","consejo":"consejo práctico para hoy en 1 oración"}. Sin mencionar IA.`);
+    const m=JSON.parse(txt);
+    document.getElementById('mensaje-card').innerHTML=`<div style="font-size:2.5rem;margin-bottom:0.6rem;">✨</div><div id="mensaje-titulo" style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--dorado);margin-bottom:0.8rem;font-weight:900;">${m.titulo}</div><div style="font-size:0.92rem;color:rgba(255,255,255,0.9);line-height:1.8;font-weight:700;">${m.mensaje}</div>`;
+    const cons=document.getElementById('mensaje-consejo');
+    cons.style.display='block';
+    cons.innerHTML=`<strong style="color:var(--dorado2);">✦ Consejo para hoy:</strong> ${m.consejo}`;
+  }catch(e){
+    document.getElementById('mensaje-card').innerHTML='<div style="font-size:2rem;">✨</div><div style="font-family:Cinzel,serif;color:var(--dorado);font-weight:900;margin:0.5rem 0;">Tu luz interior</div><div style="font-size:0.9rem;color:rgba(255,255,255,0.8);line-height:1.8;font-weight:700;">Hoy es un día especial para escuchar tu voz interior. Confiá en lo que sentís y dejá fluir la energía que te rodea.</div>';
+  }
+}
+
+// ===== FASE LUNAR =====
+async function cargarLuna(){
+  try{
+    const txt=await llamarIA(`Sos astróloga experta. Hoy es ${fechaStr}. Calculá la fase lunar real y en qué signo está la Luna. Respondé SOLO JSON sin backticks: {"emoji":"emoji fase lunar","nombre":"nombre de la fase","signo":"Luna en [signo]","descripcion":"energía de esta fase en 2-3 oraciones en español rioplatense","consejos":"3 consejos con emoji cada uno separados por salto de línea"}. Sin mencionar IA.`);
+    const l=JSON.parse(txt);
+    document.getElementById('luna-emoji').textContent=l.emoji||'🌕';
+    document.getElementById('luna-nombre').textContent=l.nombre||'';
+    document.getElementById('luna-signo').textContent=l.signo||'';
+    document.getElementById('luna-texto').textContent=l.descripcion||'';
+    ['luna-emoji','luna-nombre','luna-signo','luna-texto'].forEach(id=>document.getElementById(id).style.display='block');
+    document.getElementById('luna-card').querySelector('.spin-zen')?.remove();
+    const cons=document.getElementById('luna-consejos');
+    cons.style.display='block';
+    cons.innerHTML='<strong style="color:var(--lila2);font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;">✦ Consejos para hoy</strong><br><br>'+l.consejos.replace(/\n/g,'<br>');
+  }catch(e){
+    document.getElementById('luna-card').innerHTML='<div style="font-size:3rem;">🌕</div><div style="font-family:Cinzel,serif;color:var(--lila2);font-weight:900;margin:0.5rem 0;">Luna iluminando tu camino</div><div style="font-size:0.85rem;color:rgba(255,255,255,0.8);font-weight:700;">La luna guía tus emociones hoy. Escuchá tu intuición.</div>';
+  }
+}
+
+// ===== TRÁNSITOS =====
+let transitoActual='';
+async function verTransito(signo,btn){
+  if(transitoActual===signo)return;
+  transitoActual=signo;
+  document.querySelectorAll('.signo-tab').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  const res=document.getElementById('transito-result');
+  res.innerHTML='<div style="text-align:center;padding:1rem;"><div class="spin-zen"></div></div>';
+  try{
+    const txt=await llamarIA(`Sos astróloga experta. Escribí los tránsitos del día ${fechaStr} para ${signo}. En español rioplatense, cálido, 3-4 párrafos breves sobre amor, trabajo, energía y consejo. Máximo 180 palabras. Sin mencionar IA.`);
+    res.innerHTML=`<div style="font-family:'Cinzel',serif;color:var(--dorado);font-size:1rem;margin-bottom:0.7rem;font-weight:900;">⭐ ${signo} — ${fechaStr}</div><div style="font-size:0.88rem;line-height:1.8;font-weight:700;">${txt.replace(/\n/g,'<br>')}</div>`;
+  }catch(e){res.innerHTML='<p style="color:rgba(255,255,255,0.5);text-align:center;font-weight:700;">Intentá de nuevo 🌙</p>';}
+}
+
+// ===== TAROT CRUZ CELTA =====
+const TAROT=['El Loco','El Mago','La Sacerdotisa','La Emperatriz','El Emperador','El Hierofante','Los Enamorados','El Carro','La Fuerza','El Ermitaño','La Rueda de la Fortuna','La Justicia','El Colgado','La Muerte','La Templanza','El Diablo','La Torre','La Estrella','La Luna','El Sol','El Juicio','El Mundo','As de Oros','Dos de Oros','Tres de Oros','Cuatro de Oros','Cinco de Oros','Seis de Oros','Siete de Oros','Ocho de Oros','Nueve de Oros','Diez de Oros','Sota de Oros','Caballero de Oros','Reina de Oros','Rey de Oros','As de Copas','Dos de Copas','Tres de Copas','Cuatro de Copas','Cinco de Copas','Seis de Copas','Siete de Copas','Ocho de Copas','Nueve de Copas','Diez de Copas','Sota de Copas','Caballero de Copas','Reina de Copas','Rey de Copas','As de Espadas','Dos de Espadas','Tres de Espadas','Cuatro de Espadas','Cinco de Espadas','Seis de Espadas','Siete de Espadas','Ocho de Espadas','Nueve de Espadas','Diez de Espadas','Sota de Espadas','Caballero de Espadas','Reina de Espadas','Rey de Espadas','As de Bastos','Dos de Bastos','Tres de Bastos','Cuatro de Bastos','Cinco de Bastos','Seis de Bastos','Siete de Bastos','Ocho de Bastos','Nueve de Bastos','Diez de Bastos','Sota de Bastos','Caballero de Bastos','Reina de Bastos','Rey de Bastos'];
+const POS_CELTA=[{n:1,pos:'La situación actual'},{n:2,pos:'Lo que te cruza'},{n:3,pos:'La base o raíz'},{n:4,pos:'El pasado reciente'},{n:5,pos:'Lo que te corona'},{n:6,pos:'El futuro próximo'},{n:7,pos:'Tu actitud interna'},{n:8,pos:'Influencias externas'},{n:9,pos:'Esperanzas y temores'},{n:10,pos:'El resultado final'}];
+
+async function tirarCruzCelta(){
+  const pregunta=document.getElementById('celta-pregunta').value.trim();
+  document.getElementById('celta-loading').style.display='block';
+  document.getElementById('celta-resultado').innerHTML='';
+  const mezcladas=[...TAROT].sort(()=>Math.random()-0.5);
+  const cartas=mezcladas.slice(0,10).map((c,i)=>({carta:c,inv:Math.random()>0.72,pos:POS_CELTA[i]}));
+  const cartasTxt=cartas.map(c=>`${c.pos.n}. ${c.pos.pos}: ${c.carta}${c.inv?' (invertida)':''}`).join('\n');
+  try{
+    const txt=await llamarIA(`Sos tarotista experta en Cruz Celta. Interpretá esta lectura${pregunta?` para: "${pregunta}"`:''}:\n${cartasTxt}\nRespondé SOLO JSON sin backticks: {"titulo":"título inspirador","cartas":[{"num":1,"interpretacion":"1-2 oraciones"},...10 cartas...],"mensaje_final":"mensaje integrador de 2-3 oraciones"}. En español rioplatense, profundo y cálido. Sin mencionar IA.`,1800);
+    const r=JSON.parse(txt);
+    document.getElementById('celta-loading').style.display='none';
+    document.getElementById('celta-resultado').innerHTML=`
+      <div style="font-family:'Cinzel',serif;color:var(--dorado);font-size:1.1rem;text-align:center;margin:1.2rem 0;font-weight:900;">✦ ${r.titulo}</div>
+      ${cartas.map((c,i)=>`<div class="pos-card"><div class="pos-num">${c.pos.n}</div><div class="pos-info"><div class="pos-nombre">${c.pos.pos}</div><div class="pos-carta">${c.carta}${c.inv?' 🔄':''}</div><div class="pos-interp">${r.cartas[i]?.interpretacion||''}</div></div></div>`).join('')}
+      <div style="background:linear-gradient(135deg,rgba(74,0,128,0.3),rgba(13,27,75,0.5));border:1px solid rgba(206,147,216,0.25);border-radius:18px;padding:1.3rem;margin-top:0.5rem;text-align:center;font-size:0.88rem;color:rgba(255,255,255,0.9);line-height:1.75;font-weight:700;">
+        <div style="font-family:'Cinzel',serif;color:var(--lila2);font-size:0.9rem;margin-bottom:0.5rem;font-weight:900;">✦ Mensaje final</div>${r.mensaje_final}</div>
+      <button class="btn-nuevo" onclick="document.getElementById('celta-resultado').innerHTML='';document.getElementById('celta-pregunta').value='';">🃏 Nueva lectura</button>`;
+  }catch(e){document.getElementById('celta-loading').style.display='none';document.getElementById('celta-resultado').innerHTML='<p style="color:rgba(255,255,255,0.5);text-align:center;font-weight:700;">No pudimos conectar. Intentá de nuevo 🔮</p>';}
+}
+
+// ===== RUNAS =====
+const RUNAS=[{s:'ᚠ',n:'Fehu',m:'Abundancia'},{s:'ᚢ',n:'Uruz',m:'Fuerza'},{s:'ᚦ',n:'Thurisaz',m:'Protección'},{s:'ᚨ',n:'Ansuz',m:'Sabiduría'},{s:'ᚱ',n:'Raidho',m:'Viaje'},{s:'ᚲ',n:'Kenaz',m:'Iluminación'},{s:'ᚷ',n:'Gebo',m:'Regalo'},{s:'ᚹ',n:'Wunjo',m:'Alegría'},{s:'ᚺ',n:'Hagalaz',m:'Transformación'},{s:'ᚾ',n:'Nauthiz',m:'Necesidad'},{s:'ᛁ',n:'Isa',m:'Pausa'},{s:'ᛃ',n:'Jera',m:'Ciclos'},{s:'ᛇ',n:'Eihwaz',m:'Resistencia'},{s:'ᛈ',n:'Perthro',m:'Misterio'},{s:'ᛉ',n:'Algiz',m:'Defensa'},{s:'ᛊ',n:'Sowilo',m:'Éxito'},{s:'ᛏ',n:'Tiwaz',m:'Justicia'},{s:'ᛒ',n:'Berkano',m:'Crecimiento'},{s:'ᛖ',n:'Ehwaz',m:'Movimiento'},{s:'ᛗ',n:'Mannaz',m:'Humanidad'},{s:'ᛚ',n:'Laguz',m:'Intuición'},{s:'ᛜ',n:'Ingwaz',m:'Fertilidad'},{s:'ᛞ',n:'Dagaz',m:'Amanecer'},{s:'ᛟ',n:'Othala',m:'Herencia'}];
+const POS_RUNAS=['Pasado','Presente','Futuro'];
+
+async function tirarRunas(){
+  const pregunta=document.getElementById('runa-pregunta').value.trim();
+  const mezcladas=[...RUNAS].sort(()=>Math.random()-0.5);
+  const elegidas=mezcladas.slice(0,3);
+  document.getElementById('runas-display').innerHTML=elegidas.map((r,i)=>`
+    <div style="background:linear-gradient(135deg,rgba(74,0,128,0.5),rgba(123,31,162,0.3));border:1px solid rgba(206,147,216,0.4);border-radius:16px;padding:1rem;text-align:center;width:110px;">
+      <div style="font-size:2.2rem;">${r.s}</div>
+      <div style="font-family:'Cinzel',serif;font-size:0.75rem;color:var(--lila2);font-weight:900;">${r.n}</div>
+      <div style="font-size:0.62rem;color:rgba(255,255,255,0.5);font-weight:700;">${POS_RUNAS[i]}</div>
+    </div>`).join('');
+  const interp=document.getElementById('runa-interpretacion');
+  interp.style.display='block';
+  interp.innerHTML='<div style="text-align:center;"><div class="spin-zen"></div><p style="color:rgba(255,255,255,0.5);font-weight:700;">Las runas están hablando...</p></div>';
+  try{
+    const runaTxt=elegidas.map((r,i)=>`${POS_RUNAS[i]}: ${r.n} (${r.s}) — ${r.m}`).join('\n');
+    const txt=await llamarIA(`Sos experta en runas nórdicas. Interpretá esta lectura${pregunta?` para: "${pregunta}"`:''}:\n${runaTxt}\nEscribí título inspirador, interpretación de cada runa y mensaje final integrador. En español rioplatense, cálido y profundo. Máximo 220 palabras. Sin mencionar IA.`,700);
+    interp.innerHTML=`<h3>✦ Tu lectura de runas</h3><p>${txt.replace(/\n/g,'<br>')}</p>`;
+  }catch(e){interp.innerHTML='<p style="color:rgba(255,255,255,0.5);font-weight:700;">No pudimos conectar. Intentá de nuevo ᚱ</p>';}
+}
+
+// ===== NUMEROLOGÍA =====
+function reducir(n){while(n>9&&n!==11&&n!==22&&n!==33){let s=0;String(n).split('').forEach(d=>s+=parseInt(d));n=s;}return n;}
+const LETRAS={a:1,b:2,c:3,d:4,e:5,f:6,g:7,h:8,i:9,j:1,k:2,l:3,m:4,n:5,o:6,p:7,q:8,r:9,s:1,t:2,u:3,v:4,w:5,x:6,y:7,z:8};
+async function calcularNumero(){
+  const nombre=document.getElementById('num-nombre').value.trim();
+  const fecha=document.getElementById('num-fecha').value;
+  if(!nombre||!fecha){alert('Por favor completá tu nombre y fecha 🔢');return;}
+  const[anio,mes,dia]=fecha.split('-').map(Number);
+  const nv=reducir(dia+mes+anio);
+  const letras=nombre.toLowerCase().replace(/[^a-záéíóúñ]/g,'').replace(/[áéíóúñ]/g,c=>({á:'a',é:'e',í:'i',ó:'o',ú:'u',ñ:'n'}[c]||c));
+  let sum=0;letras.split('').forEach(l=>{if(LETRAS[l])sum+=LETRAS[l];});
+  const ne=reducir(sum);
+  document.getElementById('num-loading').style.display='block';
+  document.getElementById('num-resultado').style.display='none';
+  try{
+    const txt=await llamarIA(`Sos numeróloga experta. Para ${nombre}: Número de Vida=${nv}, Número de Expresión=${ne}. Respondé SOLO JSON sin backticks: {"titulo_vida":"título","interp_vida":"3-4 oraciones sobre misión y talentos","titulo_exp":"título","interp_exp":"2-3 oraciones","fortalezas":["f1","f2","f3"],"desafios":["d1","d2"],"mensaje":"mensaje inspirador de 2 oraciones"}. En español rioplatense, cálido. Sin mencionar IA.`,900);
+    const r=JSON.parse(txt);
+    document.getElementById('num-loading').style.display='none';
+    document.getElementById('num-resultado').style.display='block';
+    document.getElementById('num-resultado').innerHTML=`
+      <div style="background:linear-gradient(135deg,rgba(27,94,32,0.4),rgba(13,27,75,0.6));border:1px solid rgba(67,160,71,0.3);border-radius:24px;padding:1.5rem;text-align:center;margin-bottom:1rem;">
+        <div style="font-size:0.72rem;color:var(--verde3);font-weight:900;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.3rem;">Número de Vida</div>
+        <div style="font-family:'Cinzel',serif;font-size:4rem;font-weight:900;background:linear-gradient(90deg,var(--dorado),var(--dorado2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;">${nv}</div>
+        <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--dorado2);margin:0.4rem 0 0.8rem;font-weight:900;">${r.titulo_vida}</div>
+        <div style="font-size:0.85rem;color:rgba(255,255,255,0.85);line-height:1.75;font-weight:700;">${r.interp_vida}</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(206,147,216,0.2);border-radius:20px;padding:1.3rem;margin-bottom:1rem;">
+        <div style="font-size:0.7rem;color:var(--lila2);font-weight:900;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.3rem;">Número de Expresión</div>
+        <div style="font-family:'Cinzel',serif;font-size:2.5rem;font-weight:900;color:var(--lila2);line-height:1;">${ne}</div>
+        <div style="font-family:'Cinzel',serif;font-size:0.9rem;color:rgba(206,147,216,0.85);margin:0.3rem 0 0.7rem;font-weight:900;">${r.titulo_exp}</div>
+        <div style="font-size:0.82rem;color:rgba(255,255,255,0.8);line-height:1.7;font-weight:700;">${r.interp_exp}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:1rem;">
+        <div style="background:rgba(67,160,71,0.1);border:1px solid rgba(67,160,71,0.2);border-radius:16px;padding:1rem;">
+          <div style="font-size:0.68rem;color:var(--verde3);font-weight:900;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.6rem;">✦ Fortalezas</div>
+          ${r.fortalezas.map(f=>`<div style="font-size:0.78rem;color:rgba(255,255,255,0.85);margin-bottom:0.3rem;font-weight:700;">💚 ${f}</div>`).join('')}
+        </div>
+        <div style="background:rgba(233,30,140,0.08);border:1px solid rgba(233,30,140,0.15);border-radius:16px;padding:1rem;">
+          <div style="font-size:0.68rem;color:#f48fb1;font-weight:900;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.6rem;">✦ Desafíos</div>
+          ${r.desafios.map(d=>`<div style="font-size:0.78rem;color:rgba(255,255,255,0.85);margin-bottom:0.3rem;font-weight:700;">🔮 ${d}</div>`).join('')}
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg,rgba(74,0,128,0.3),rgba(13,27,75,0.5));border:1px solid rgba(249,168,37,0.2);border-radius:16px;padding:1.2rem;text-align:center;font-size:0.88rem;color:rgba(255,255,255,0.9);line-height:1.75;font-weight:700;">✨ ${r.mensaje}</div>
+      <button class="btn-nuevo" onclick="document.getElementById('num-resultado').style.display='none';">🔢 Calcular otro número</button>`;
+  }catch(e){document.getElementById('num-loading').style.display='none';document.getElementById('num-resultado').style.display='block';document.getElementById('num-resultado').innerHTML='<p style="color:rgba(255,255,255,0.5);text-align:center;font-weight:700;">No pudimos conectar. Intentá de nuevo 🔢</p>';}
+}
+
+// ===== CRISTAL Y ANIMAL =====
+async function cargarGuias(){
+  try{
+    const txt=await llamarIA(`Sos guía espiritual. Para el día ${fechaStr} elegí un cristal y un animal de poder. Respondé SOLO JSON sin backticks: {"cristal_nombre":"nombre","cristal_texto":"para qué sirve hoy en 1-2 oraciones","animal_emoji":"emoji","animal_nombre":"nombre","animal_texto":"mensaje en 1-2 oraciones"}. En español rioplatense. Sin mencionar IA.`,400);
+    const g=JSON.parse(txt);
+    document.getElementById('cristal-nombre').textContent=g.cristal_nombre||'Amatista';
+    document.getElementById('cristal-texto').textContent=g.cristal_texto||'Protege tu energía hoy.';
+    document.getElementById('animal-emoji').textContent=g.animal_emoji||'🦋';
+    document.getElementById('animal-nombre').textContent=g.animal_nombre||'Mariposa';
+    document.getElementById('animal-texto').textContent=g.animal_texto||'Te invita a transformarte.';
+  }catch(e){
+    document.getElementById('cristal-nombre').textContent='Amatista';
+    document.getElementById('cristal-texto').textContent='Protege tu energía y potencia la intuición hoy.';
+    document.getElementById('animal-emoji').textContent='🦋';
+    document.getElementById('animal-nombre').textContent='Mariposa';
+    document.getElementById('animal-texto').textContent='Te invita a transformarte y soltar lo que ya no te sirve.';
+  }
+}
+
+// ===== AFIRMACIONES =====
+async function pedirAfirmaciones(estado,btn){
+  document.querySelectorAll('#afirmaciones .tipo-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  document.getElementById('afirm-loading').style.display='block';
+  document.getElementById('afirm-resultado').style.display='none';
+  try{
+    const txt=await llamarIA(`Sos coach espiritual. La persona se siente ${estado}. Generá 5 afirmaciones poderosas. Respondé SOLO JSON sin backticks: {"titulo":"título inspirador","afirmaciones":["af1","af2","af3","af4","af5"],"cierre":"mensaje de cierre de 1 oración"}. En español rioplatense, en primera persona. Sin mencionar IA.`,500);
+    const a=JSON.parse(txt);
+    document.getElementById('afirm-loading').style.display='none';
+    const div=document.getElementById('afirm-resultado');div.style.display='block';
+    div.innerHTML=`<div style="font-family:'Cinzel',serif;color:var(--dorado);font-size:1rem;text-align:center;margin-bottom:1rem;font-weight:900;">✦ ${a.titulo}</div>${a.afirmaciones.map(af=>`<div style="background:rgba(255,255,255,0.05);border-left:3px solid var(--dorado);border-radius:0 14px 14px 0;padding:0.9rem 1rem;margin-bottom:0.6rem;font-size:0.88rem;color:rgba(255,255,255,0.9);line-height:1.6;font-style:italic;font-weight:700;">✨ ${af}</div>`).join('')}<div style="text-align:center;margin-top:0.8rem;font-size:0.82rem;color:rgba(255,255,255,0.7);font-weight:700;">💚 ${a.cierre}</div>`;
+  }catch(e){document.getElementById('afirm-loading').style.display='none';}
+}
+
+// ===== ARTÍCULOS =====
+const ART_TEMAS=[
+  {emoji:'🧘',tag:'Meditación',titulo:'5 técnicas para calmar la mente en 5 minutos',bg:'linear-gradient(135deg,#1b5e20,#2e7d32)'},
+  {emoji:'🌙',tag:'Sueño',titulo:'Cómo preparar tu mente para dormir mejor',bg:'linear-gradient(135deg,#1a237e,#283593)'},
+  {emoji:'😮‍💨',tag:'Relax',titulo:'Respiración: el secreto para calmar la ansiedad',bg:'linear-gradient(135deg,#4a0080,#7b1fa2)'},
+  {emoji:'🌿',tag:'Mindfulness',titulo:'Qué es el mindfulness y cómo empezar hoy',bg:'linear-gradient(135deg,#004d40,#00695c)'},
+  {emoji:'☀️',tag:'Rutinas',titulo:'Rutina matinal zen para empezar el día con energía',bg:'linear-gradient(135deg,#e65100,#f57c00)'},
+  {emoji:'💆',tag:'Estrés',titulo:'7 formas de soltar el estrés sin salir de casa',bg:'linear-gradient(135deg,#880e4f,#c2185b)'},
+];
+
+async function abrirArticulo(idx){
+  const art=ART_TEMAS[idx];
+  const modal=document.getElementById('art-modal');
+  modal.style.display='block';
+  document.getElementById('art-modal-loading').style.display='block';
+  document.getElementById('art-modal-content').innerHTML='';
+  modal.scrollIntoView({behavior:'smooth'});
+  try{
+    const txt=await llamarIA(`Escribí un artículo original completo sobre: "${art.titulo}". Categoría: ${art.tag}. En español rioplatense, cálido y práctico. Incluí introducción emotiva, 4-5 secciones con subtítulos marcados con ##, consejos concretos y cierre inspirador. Máximo 400 palabras. Usá emojis ocasionalmente. Sin mencionar IA.`,1000);
+    document.getElementById('art-modal-loading').style.display='none';
+    document.getElementById('art-modal-content').innerHTML=`
+      <div style="font-size:2.5rem;text-align:center;margin-bottom:0.8rem;">${art.emoji}</div>
+      <div style="font-size:0.68rem;color:var(--verde3);font-weight:900;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.4rem;">${art.tag}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--dorado);margin-bottom:1.2rem;line-height:1.35;font-weight:900;">${art.titulo}</div>
+      <div style="font-size:0.86rem;color:rgba(255,255,255,0.88);line-height:1.85;font-weight:700;">${txt.replace(/\n\n/g,'</p><p style="margin-top:0.8rem;">').replace(/\n/g,'<br>').replace(/##\s?(.*)/g,'<div style="font-family:Cinzel,serif;color:var(--verde3);font-size:0.95rem;margin:1rem 0 0.4rem;font-weight:900;">$1</div>').replace(/\*\*(.*?)\*\*/g,'<strong style="color:var(--dorado2);">$1</strong>')}</div>`;
+  }catch(e){
+    document.getElementById('art-modal-loading').style.display='none';
+    document.getElementById('art-modal-content').innerHTML='<p style="color:rgba(255,255,255,0.5);text-align:center;font-weight:700;">No pudimos cargar el artículo. Intentá de nuevo 🌿</p>';
+  }
+}
+function cerrarArticulo(){document.getElementById('art-modal').style.display='none';document.getElementById('articulos').scrollIntoView({behavior:'smooth'});}
+
+// ===== INICIAR TODO =====
+cargarMensaje();
+cargarLuna();
+cargarGuias();
+verTransito('Aries',document.querySelector('.signo-tab'));
+</script>
+</body>
+</html>
